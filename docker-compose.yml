@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+  mysqldb:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'mysql'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - mysql-db:/var/lib/mysql
+      - ./utils/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  mysql-db:
