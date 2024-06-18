@@ -1,1 +1,1 @@
-CREATE SCHEMA 'food-finder';
+CREATE SCHEMA `food-finder`;
