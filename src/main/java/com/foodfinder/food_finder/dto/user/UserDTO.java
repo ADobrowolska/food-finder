@@ -1,6 +1,6 @@
 package com.foodfinder.food_finder.dto.user;
 
-import com.foodfinder.food_finder.utils.Role;
+import com.foodfinder.food_finder.model.RoleEnum;
 
 public class UserDTO {
 
@@ -8,6 +8,6 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String email;
-    private Role role;
+    private RoleEnum role;
 
 }

@@ -1,14 +1,15 @@
 package com.foodfinder.food_finder.model;
 
-import com.foodfinder.food_finder.utils.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
 public class User implements UserDetails {
 
     @Id
@@ -28,13 +30,17 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @OneToMany(cascade = {CascadeType.ALL})
+    private List<UserRole> userRole = new ArrayList<>();
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        if (userRole == null) {
+            return List.of();
+        }
+        return userRole.stream()
+                .map(r -> new SimpleGrantedAuthority(r.getRole().getRoleEnum().name())).toList();
     }
 
     @Override
