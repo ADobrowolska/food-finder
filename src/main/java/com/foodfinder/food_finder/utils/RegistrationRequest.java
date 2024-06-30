@@ -1,19 +1,20 @@
 package com.foodfinder.food_finder.utils;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.foodfinder.food_finder.model.RoleEnum;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@EqualsAndHashCode
+@ToString
+@Getter
 @Builder
-public class RegisterRequest {
+public class RegistrationRequest {
 
     private String firstName;
     private String lastName;
     private String email;
     private String password;
+    private RoleEnum role;
 
 }
