@@ -1,6 +1,5 @@
 package com.foodfinder.food_finder.utils;
 
-import com.foodfinder.food_finder.model.RoleEnum;
 import lombok.*;
 
 @AllArgsConstructor
@@ -15,6 +14,5 @@ public class RegistrationRequest {
     private String lastName;
     private String email;
     private String password;
-    private RoleEnum role;
 
 }

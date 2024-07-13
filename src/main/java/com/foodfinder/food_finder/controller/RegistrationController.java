@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.management.InstanceAlreadyExistsException;
 
 @RestController
-@RequestMapping("api/v1/registration")
+@RequestMapping("/api/v1/registration")
 public class RegistrationController {
 
     private final RegistrationService registrationService;

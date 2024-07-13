@@ -8,9 +8,11 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -18,25 +20,24 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final AppUserService appUserDetailsService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AppUserService appUserService;
+
 
     @Autowired
-    public SecurityConfig(AppUserService appUserDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.appUserDetailsService = appUserDetailsService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    public SecurityConfig(AppUserService appUserDetailsService) {
+        this.appUserService = appUserDetailsService;
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return appUserDetailsService;
+        return appUserService;
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(appUserDetailsService);
-        provider.setPasswordEncoder(bCryptPasswordEncoder);
+        provider.setUserDetailsService(appUserService);
+        provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
 
@@ -49,11 +50,15 @@ public class SecurityConfig {
                     auth.requestMatchers("/auth/admin/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
                 })
-                .formLogin(s -> s.permitAll())
+                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .logout(auth -> auth.deleteCookies("JSESSIONID")
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout")))
                 .build();
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 }

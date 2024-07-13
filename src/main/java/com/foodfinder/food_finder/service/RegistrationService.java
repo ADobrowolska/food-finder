@@ -1,13 +1,14 @@
 package com.foodfinder.food_finder.service;
 
+import com.foodfinder.food_finder.model.AppUser;
 import com.foodfinder.food_finder.model.Role;
 import com.foodfinder.food_finder.model.RoleEnum;
-import com.foodfinder.food_finder.model.User;
 import com.foodfinder.food_finder.model.UserRole;
 import com.foodfinder.food_finder.repository.RoleRepository;
 import com.foodfinder.food_finder.utils.EmailValidator;
 import com.foodfinder.food_finder.utils.RegistrationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,12 +21,14 @@ public class RegistrationService {
     private final EmailValidator emailValidator;
     private final AppUserService appUserService;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public RegistrationService(EmailValidator emailValidator, AppUserService appUserService, RoleRepository roleRepository) {
+    public RegistrationService(EmailValidator emailValidator, AppUserService appUserService, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.emailValidator = emailValidator;
         this.appUserService = appUserService;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -35,11 +38,11 @@ public class RegistrationService {
             throw new IllegalStateException("Invalid email address");
         }
         Role role = roleRepository.findByRoleEnum(RoleEnum.USER);
-        User user = new User(
+        AppUser user = new AppUser(
                 request.getFirstName(),
                 request.getLastName(),
                 request.getEmail(),
-                request.getPassword(),
+                passwordEncoder.encode(request.getPassword()),
                 new ArrayList<>()
         );
         UserRole userRole = new UserRole();
