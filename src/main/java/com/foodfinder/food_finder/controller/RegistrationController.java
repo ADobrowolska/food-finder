@@ -1,9 +1,12 @@
 package com.foodfinder.food_finder.controller;
 
 
+import com.foodfinder.food_finder.dto.user.UserDTO;
+import com.foodfinder.food_finder.dto.user.UserMapper;
 import com.foodfinder.food_finder.service.RegistrationService;
 import com.foodfinder.food_finder.utils.RegistrationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -20,8 +23,9 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody RegistrationRequest request) throws InstanceAlreadyExistsException {
-        return registrationService.register(request);
+    public ResponseEntity<UserDTO> register(@RequestBody RegistrationRequest request) throws InstanceAlreadyExistsException {
+        UserDTO receivedUserDTO = UserMapper.mapToUserDTO(registrationService.register(request));
+        return ResponseEntity.ok(receivedUserDTO);
     }
 
 

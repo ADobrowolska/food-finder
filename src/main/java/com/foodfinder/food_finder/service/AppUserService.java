@@ -52,14 +52,13 @@ public class AppUserService implements UserDetailsService {
         return arrayUserRoles;
     }
 
-    public String signUpUser(AppUser user) throws InstanceAlreadyExistsException {
+    public AppUser signUpUser(AppUser user) throws InstanceAlreadyExistsException {
         boolean userExists = userRepository.findByEmail(user.getEmail())
                 .isPresent();
         if (userExists) {
             throw new InstanceAlreadyExistsException("User exists.");
         }
-        userRepository.save(user);
-        return "SignUpUser";
+        return userRepository.save(user);
     }
 
 

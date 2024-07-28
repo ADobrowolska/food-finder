@@ -32,7 +32,7 @@ public class RegistrationService {
     }
 
     @Transactional
-    public String register(RegistrationRequest request) throws InstanceAlreadyExistsException {
+    public AppUser register(RegistrationRequest request) throws InstanceAlreadyExistsException {
         boolean isValidEmail = emailValidator.test(request.getEmail());
         if (!isValidEmail) {
             throw new IllegalStateException("Invalid email address");
